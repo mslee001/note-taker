@@ -9,6 +9,10 @@ var notes = JSON.parse(data);
 var app = express();
 var PORT = process.env.PORT || 3000;
 
+var uniqueId = function() {
+    return 'id-' + Math.random().toString(36).substr(2, 16);
+  };
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/assets", express.static('./public/assets/'));
@@ -28,14 +32,14 @@ app.get("/api/notes", function(req, res) {
 
 app.post("/api/notes", function(req,res) {
     var newNote = req.body;
-    newNote.id = notes.length + 1;
+    newNote.id = uniqueId();
     notes.push(newNote);
     fs.writeFileSync("./db/db.json", JSON.stringify(notes));
     res.json(notes);
 })
 
 app.delete("/api/notes/:id", function(req,res) {
-    var noteToDelete = parseInt(req.params.id);
+    var noteToDelete = req.params.id;
 
     for (var i = 0; i < notes.length; i++) {
         if (noteToDelete === notes[i].id) {
