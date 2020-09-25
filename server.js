@@ -30,6 +30,10 @@ app.get("/api/notes", function(req, res) {
     return res.json(notes);
     });
 
+app.get("*", function(req, res) {
+        res.sendFile(path.join(__dirname, "./public/index.html"));
+    });
+
 app.post("/api/notes", function(req,res) {
     var newNote = req.body;
     newNote.id = uniqueId();
